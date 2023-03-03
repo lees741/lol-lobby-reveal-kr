@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Ekko;
-using Newtonsoft.Json;
 using Spectre.Console;
 
 namespace LobbyReveal
@@ -22,7 +17,7 @@ namespace LobbyReveal
 
         public async static Task Main(string[] args)
         {
-            Console.Title = "notepad";
+            Console.Title = "랭겜 아군 소환사명 탐지기";
             var watcher = new LeagueClientWatcher();
             watcher.OnLeagueClient += (clientWatcher, client) =>
             {
@@ -47,32 +42,45 @@ namespace LobbyReveal
 
             while (true)
             {
-                var input = Console.ReadKey(true);
-                if (!int.TryParse(input.KeyChar.ToString(), out var i) || i > _handlers.Count || i < 1)
+                try {
+                    var input = Console.ReadKey(true);
+                    var i = 1;
+                    if (input.KeyChar.ToString().Equals("q") || input.KeyChar.ToString().Equals("Q"))
+                    {
+                        return;
+                    }
+                    if (!input.KeyChar.ToString().Equals("y") && !input.KeyChar.ToString().Equals("Y"))
+                    {
+                        AnsiConsole.Write(new Markup("[red]\n잘못된 입력입니다\n[/]"));
+                        _update = true;
+                        continue;
+                    }
+
+                    var region = _handlers[i - 1].GetRegion();
+
+                    var link =
+                        $"https://www.op.gg/multisearch/{region ?? Region.KR}?summoners=" +
+                        HttpUtility.UrlEncode($"{string.Join(",", _handlers[i - 1].GetSummoners())}");
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        Process.Start(new ProcessStartInfo(link) { UseShellExecute = true });
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        Process.Start("xdg-open", link);
+                    }
+                    else
+                    {
+                        Process.Start("open", link);
+                    }
+                    _update = true;
+
+                } catch (System.ArgumentOutOfRangeException)
                 {
-                    Console.WriteLine("Invalid input.");
+                    AnsiConsole.Write(new Markup("[red]\n먼저 롤 클라이언트를 실행해주세요\n[/]"));
                     _update = true;
                     continue;
                 }
-
-                var region = _handlers[i - 1].GetRegion();
-
-                var link =
-                    $"https://www.op.gg/multisearch/{region ?? Region.EUW}?summoners=" +
-                    HttpUtility.UrlEncode($"{string.Join(",", _handlers[i - 1].GetSummoners())}");
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Process.Start(link);
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    Process.Start("xdg-open", link);
-                }
-                else
-                {
-                    Process.Start("open", link);
-                }
-                _update = true;
             }
 
         }
@@ -84,15 +92,20 @@ namespace LobbyReveal
                 if (_update)
                 {
                     Console.Clear();
-                    AnsiConsole.Write(new Markup("[u][yellow]https://www.github.com/Riotphobia/LobbyReveal[/][/]")
+                    AnsiConsole.Write(new Markup("[yellow]랭겜에서 아군의 소환사명을 알아보자[/]")
                         .Centered());
-                    AnsiConsole.Write(new Markup("[u][blue][b]v1.0.1 - 0xInception[/][/][/]").Centered());
+                    Console.WriteLine();
+                    AnsiConsole.Write(new Markup("[lime]한국 서버 패치: 이현성[/]")
+                        .Centered());
+                    Console.WriteLine();
+                    AnsiConsole.Write(new Markup("[cyan]출처:https://github.com/Riotphobia/LobbyReveal[/]")
+                        .Centered());
                     Console.WriteLine();
                     Console.WriteLine();
                     for (int i = 0; i < _handlers.Count; i++)
                     {
                         var link =
-                            $"https://www.op.gg/multisearch/{_handlers[i].GetRegion() ?? Region.EUW}?summoners=" +
+                            $"https://www.op.gg/multisearch/{_handlers[i].GetRegion() ?? Region.KR}?summoners=" +
                             HttpUtility.UrlEncode($"{string.Join(",", _handlers[i].GetSummoners())}");
 
                         AnsiConsole.Write(
@@ -106,7 +119,7 @@ namespace LobbyReveal
 
                     Console.WriteLine();
                     Console.WriteLine();
-                    AnsiConsole.Write(new Markup("[u][cyan][b]Type the client number to open op.gg![/][/][/]")
+                    AnsiConsole.Write(new Markup("[cyan]op.gg에서 멀티서치를 하려면 [[y]]를 입력하세요[/] / [red]종료하려면 [[q]]를 입력하세요[/]")
                         .LeftJustified());
                     Console.WriteLine();
                     _update = false;
