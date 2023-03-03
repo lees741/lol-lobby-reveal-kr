@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Ekko;
@@ -12,6 +11,7 @@ namespace LobbyReveal;
 public enum Region
 {
     UNKNOWN,
+    KR,
     EUW,
     EUNE,
     NA,
@@ -31,6 +31,7 @@ public enum Region
 public enum Platform
 {
     UNKNOWN,
+    KR,
     EUW1,
     EUN1,
     NA1,
