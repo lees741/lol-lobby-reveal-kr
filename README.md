@@ -1,15 +1,8 @@
 # LobbyReveal
-#### LobbyReveal is a small app that lets you see who is in your lobby.
-## Example
-![image](https://cdn.discordapp.com/attachments/881887652155117621/1073273537122549891/image.png)
-![image](https://cdn.discordapp.com/attachments/881887652155117621/1073273708132708403/image.png)
-## Where can i download the compiled version?
-Head over to [releases](https://github.com/Riotphobia/LobbyReveal/releases/)
-## How can i compile it for myself?
-* .NET Framework 4.8 which only works for windows
-* .NET 6.0 which works for windows, macos and linux!
-##### You will need to install git (or just download the files from github).
-##### You will need to install visual studio and the SDK for the runtime you want to use.
-##### Open a command line, use `git clone https://github.com/Riotphobia/LobbyReveal` (or manually download it) and then cd into the folder.Run `dotnet build`. The files should be inside of `\src\LobbyReveal\bin\Debug\`
-## What is Ekko?
-* My LCU project, open sourced too. [EKKO](https://github.com/0xInception/Ekko)
+## LobbyReveal은 무슨 프로그램인가요?
+#### 이것은 RiotPhobia의 LobbyReveal을 한국 서버에서 사용할 수 있도록 만든 것입니다.
+#### [여기](https://github.com/Riotphobia)에서 원본 소스 코드를 확인할 수 있습니다.
+#### [12.22](https://www.leagueoflegends.com/ko-kr/news/game-updates/patch-12-22-notes/#patch-competitive) 패치로 인해 개인/2인 랭크 게임의 챔피언 선택 화면에서 자신이나 2인 랭크 파트너를 제외한 모든 소환사 이름을 확인할 수 없게 되었는데 **LoobyReveal**을 통해 챔피언 선택 화면에서 아군의 소환사 이름을 확인할 수 있습니다.
+## 어떻게 다운로드 받을 수 있나요?
+#### [Releases](https://github.com/lees741/lol-lobby-reveal-kr/releases)에서 다운 받을 수 있습니다.
+##### 현재 Windows 운영체제에서만 사용 가능합니다.
